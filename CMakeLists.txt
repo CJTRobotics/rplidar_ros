@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 2.8.3)
 project(rplidar_ros)
 
 set(RPLIDAR_SDK_PATH "./sdk/")
+set(THREADS_PREFER_PTHREAD_FLAG ON)
 
 FILE(GLOB RPLIDAR_SDK_SRC 
   "${RPLIDAR_SDK_PATH}/src/arch/linux/*.cpp"
@@ -15,6 +16,8 @@ find_package(catkin REQUIRED COMPONENTS
   sensor_msgs
 )
 
+find_package(Threads REQUIRED)
+
 include_directories(
   ${RPLIDAR_SDK_PATH}/include
   ${RPLIDAR_SDK_PATH}/src
@@ -24,7 +27,7 @@ include_directories(
 catkin_package()
 
 add_executable(rplidarNode src/node.cpp ${RPLIDAR_SDK_SRC})
-target_link_libraries(rplidarNode ${catkin_LIBRARIES})
+target_link_libraries(rplidarNode ${catkin_LIBRARIES} Threads::Threads)
 
 add_executable(rplidarNodeClient src/client.cpp)
 target_link_libraries(rplidarNodeClient ${catkin_LIBRARIES})
